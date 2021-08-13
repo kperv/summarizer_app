@@ -1,2 +1,3 @@
-# summarizerizer_app
-Web application for extractive text summarisation
+# A web application to summarize texts into several senteces. 
+
+
