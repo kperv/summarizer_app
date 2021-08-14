@@ -7,5 +7,4 @@ RUN apt install -y build-essential \
   python3-dev \
   git
 
-RUN python3 -m pip install jupyter \
-  transformers[torch]
+RUN python3 -m pip install flask

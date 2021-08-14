@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from flask import Flask, render_template, request, url_for
 
 
@@ -9,7 +10,7 @@ def home():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request_method == 'POST':
+    if request.method == 'POST':
         form = request.form
         text = form['text']
         number = form['number']
@@ -18,4 +19,4 @@ def index():
     render_template("index.html")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
