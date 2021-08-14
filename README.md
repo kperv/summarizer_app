@@ -1,3 +1,3 @@
-# A web application to summarize texts into several senteces. 
+# A web application to summarize a text into several sentences. 
 
 
