@@ -7,14 +7,17 @@
         <title>Text Summarization</title>
     </head>
     <body>
+        <center>
         <div class="ml-container">
+            <br>
             <h4>Enter a text for summarization:</h4>
             <form role="form" method='POST' action='/process'>
                 <div class="form-group">
                     <textarea type="text"
-                            class="form-control"
-                            id="url-box"
-                            style="max-width: 500px;">
+                              name="text"
+                              class="form-control"
+                              id="url-box"
+                              style="max-width: 600px;">
                     </textarea>
                     <br>
                     <input type="text" 
@@ -22,20 +25,20 @@
                         class="form-control"
                         id="url-box"
                         placeholder="Enter a number of sentences in a summary"
-                        style="max-width: 350px;">
+                        style="max-width: 600px;">
+                    <br>
                 </div>
                 <button type="reset" class="btn btn-primary"><i class="fa fa-eraser"></i> Clear</button>
                 <button type="submit" class="btn btn-info"><i class="fa fa-database"></i> Summarize</button>
             </form>
         </div>
+        <br>
         <div class="container">
             <div class="alert alert-success" role="alert">
-            <p>Summary:</p>
-            <ul>{% for i in result %}
-                <li>{{i}}</li>
-                {%endfor %}
-            </ul>
+                <h4>Summary:</h4>
+                <ul>{{result}}</ul>
             </div>
         </div>
+        </center>
     </body>
 </html>

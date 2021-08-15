@@ -11,9 +11,11 @@ def index():
 @app.route('/process', methods=['POST'])
 def process():
     if request.method == 'POST':
-        text = request.form['text']
-        number = int(request.form['number'])
-        result = text[:number]
+        input_text = request.form['text']
+        input_number = request.form['number']
+        text = [input_text]
+        number = int(input_number)
+        result = number
     return render_template("index.html", result=result)
 
 if __name__ == '__main__':
