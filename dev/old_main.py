@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from model.py import *
+from clustering_model.py import *
 
 def set_args():
     parser = argparse.ArgumentParser(description='Summarize text into n sentences')

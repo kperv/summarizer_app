@@ -1,0 +1,16 @@
+name: summarizer
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  python
+  pip
+  numpy
+  pandas
+  pytorch
+  pytorch_lightning
+  transformers
+  datasets
+  bert_score
