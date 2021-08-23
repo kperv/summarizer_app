@@ -1,5 +1,8 @@
 numpy==1.19.5
-spacy==3.1.1
+nltk==3.2.5
+pandas==1.1.5
 transformers==4.9.2
 bert_score==0.3.10
-sklearn==0.22.2.post1
+datasets==1.11.0
+torch==1.9.0
+PyTorch Lightning==1.4.2
