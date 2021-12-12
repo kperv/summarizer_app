@@ -1,8 +1,9 @@
-numpy==1.19.5
-nltk==3.2.5
-pandas==1.1.5
-transformers==4.9.2
-bert_score==0.3.10
-datasets==1.11.0
-torch==1.9.0
-PyTorch Lightning==1.4.2
+numpy
+nltk
+pandas
+transformers
+bert-score
+sklearn
+datasets
+torch
+rouge==0.3.1

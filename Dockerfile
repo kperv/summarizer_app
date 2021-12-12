@@ -1,10 +1,14 @@
-FROM ubuntu:18.04
+FROM pytorch/pytorch:1.7.0-cuda11.0-cudnn8-devel
 
-RUN apt update
-RUN apt install -y build-essential \
-  python3 \
-  python3-pip \
-  python3-dev \
-  git
+WORKDIR /app
 
-RUN python3 -m pip install flask
+COPY ./requirements.txt /app/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+
+COPY . /app
+
+EXPOSE 8000
+
+CMD ["Summarizer:app", "--host", "0.0.0.0", "--port", "8000"]
+
