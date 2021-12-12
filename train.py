@@ -195,6 +195,7 @@ def save_predictions(dataset, tokenizer, predictions):
 
 def calculate_metrics(result_df):
     result_df = m.add_metrics(result_df)
+    result_df.to_csv('predictions.csv')
     metrics = OrderedDict({
         'Bert-score': result_df.bert_score.mean(),
         'rouge-1': round(result_df['rouge-1'].mean(), 3),
