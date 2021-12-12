@@ -23,7 +23,11 @@ def get_rouge_score(sample):
     references = []
     references.append(sample.text)
     preprocess_exs = lambda exs : [ex.strip().lower() for ex in exs]
-    rouge_scores =  rouge.get_scores(preprocess_exs(predictions), preprocess_exs(references), avg=True)
+    rouge_scores = rouge.get_scores(
+        preprocess_exs(predictions),
+        preprocess_exs(references),
+        avg=True
+    )
     return {k: round(v['f'], 3) for k, v in rouge_scores.items()}
 
 def add_metrics(dataset):
@@ -33,5 +37,7 @@ def add_metrics(dataset):
     dataset[['rouge-1', 'rouge-2', 'rouge-l']] = 0, 0, 0
     df = pd.DataFrame(list(dataset.apply(get_rouge_score, axis=1).values))
     dataset = df.combine_first(dataset)
-    dataset = dataset.reindex(columns=['text', 'summary', 'bert_score', 'rouge-1', 'rouge-2', 'rouge-l'])
+    dataset = dataset.reindex(
+        columns=['text', 'summary', 'bert_score', 'rouge-1', 'rouge-2', 'rouge-l']
+    )
     return dataset

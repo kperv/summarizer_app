@@ -31,7 +31,7 @@ def define_args():
         description=textwrap.dedent('''\
                  Training a summarizing model
                  --------------------------------
-                 to run on 50 samples set --dev-mode=True
+                 to run on 30 samples set --dev-mode=True
 
 
             ''')
@@ -77,6 +77,13 @@ def define_args():
         default=False,
         help='save pretrained model weights in the project folder'
     )
+    parser.add_argument(
+        '-o',
+        '--use_original_dataset',
+        type=bool,
+        default=False,
+        help='use MLSUM for training without modifications'
+    )
 
     args = parser.parse_args()
     args.device = torch.cuda.is_available()
@@ -84,24 +91,21 @@ def define_args():
 
 
 def get_dataset(args):
-    if args.modify_dataset:
-        train_dataset = md.load_and_modify_dataset(args)
+    if args.modify_dataset or args.use_original_dataset:
+        dataset = md.load_and_modify_dataset(args)
     else:
         train = pd.read_csv('data/train.csv')
         val = pd.read_csv('data/val.csv')
-        train_dataset = DatasetDict({
+        test = pd.read_csv('data/test.csv')
+        dataset = DatasetDict({
             'train': Dataset.from_pandas(train),
-            'val': Dataset.from_pandas(val)
+            'val': Dataset.from_pandas(val),
+            'test': Dataset.from_pandas(test)
     })
-    test = pd.read_csv('data/test.csv')
-    test_dataset = DatasetDict({
-        'test': Dataset.from_pandas(test)
-    })
-    return train_dataset, test_dataset
+    return dataset
 
 
-def train(datasets, args):
-    train, test = datasets
+def train(dataset, args):
     tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
 
     if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
@@ -120,10 +124,6 @@ def train(datasets, args):
         model_inputs["labels"] = labels["input_ids"]
         return model_inputs
 
-    def preprocess_function_for_test(examples):
-        inputs = [prefix + doc for doc in examples["text"]]
-        model_inputs = tokenizer(inputs, max_length=max_input_length, truncation=True)
-        return model_inputs
 
     def compute_metrics(eval_pred):
         rouge = Rouge()
@@ -143,17 +143,16 @@ def train(datasets, args):
 
         return {k: round(v, 4) for k, v in result.items()}
 
-    tokenized_datasets = train.map(preprocess_function, batched=True)
-    tokenized_test_dataset = test.map(preprocess_function_for_test, batched=True)
+    tokenized_datasets = dataset.map(preprocess_function, batched=True)
     model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint)
     if args.device:
         model.to(device)
 
     model_name = model_checkpoint.split("/")[-1]
-    logging_steps = len(train["train"]) // (args.batch_size * args.epochs)
+    logging_steps = len(dataset["train"]) // (args.batch_size * args.epochs)
 
     train_args = Seq2SeqTrainingArguments(
-        f"{model_name}-finetuned-extr-mlsum",
+        f"{model_name}-mlsum-ru",
         evaluation_strategy="epoch",
         learning_rate=2e-5,
         per_device_train_batch_size=args.batch_size,
@@ -179,7 +178,7 @@ def train(datasets, args):
     trainer.train()
     if args.save_model:
         model.save_pretrained('.')
-    predictions = trainer.predict(tokenized_test_dataset["test"])
+    predictions = trainer.predict(tokenized_datasets["test"])
     return tokenizer, predictions
 
 
@@ -223,9 +222,9 @@ def save_metrics_to_file(metrics, report_file="metrics.txt"):
 
 def main():
     args = define_args()
-    datasets = get_dataset(args)
-    preds = train(datasets, args)
-    df = save_predictions(datasets[1], *preds)
+    dataset = get_dataset(args)
+    preds = train(dataset, args)
+    df = save_predictions(dataset, *preds)
     metrics = calculate_metrics(df)
     save_metrics_to_file(metrics)
 

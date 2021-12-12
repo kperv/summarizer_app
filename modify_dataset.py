@@ -57,12 +57,11 @@ def transform_dataset(df):
 
 
 def clean_dataset(df):
-    return df.drop(df.columns[1:], axis=1)
+    return df.drop(df.columns[2:], axis=1)
 
 
 def load_data(args):
     raw_datasets = load_dataset(DATASET, DATASET_LANG)
-
     raw_datasets['train'].set_format("pandas")
     raw_datasets['validation'].set_format("pandas")
     raw_datasets['test'].set_format("pandas")
@@ -95,15 +94,18 @@ def form_dataset_dict(dfs):
     train_dataset, val_dataset, test_dataset = dfs
     dataset = DatasetDict({
         'train': Dataset.from_pandas(train_dataset),
-        'val': Dataset.from_pandas(val_dataset)
+        'val': Dataset.from_pandas(val_dataset),
+        'test': Dataset.from_pandas(test_dataset)
     })
     return dataset
 
 
 def load_and_modify_dataset(args):
-    dfs = load_data(args)
-    transformed_dfs = transform(dfs)
+    dataset = load_data(args)
+    if args.use_original_dataset:
+        return form_dataset_dict(dataset)
+    transformed_dataset = transform(dataset)
     if args.save_modified_dataset:
-        save_modified_dataset(transformed_dfs)
-    dataset = form_dataset_dict(transformed_dfs)
+        save_modified_dataset(transformed_dataset)
+    dataset = form_dataset_dict(transformed_dataset)
     return dataset

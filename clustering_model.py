@@ -1,11 +1,9 @@
 """
-Implementation of text extractive summarizer with conditional output.
+Implementation of text extractive summarizer.
 
-Text written in two languages can be processed and summarized: Russian and Spanish.
-Words tokenized and encoded by Bert pretrained model, 
-sentence embeddings got as a mean of token embeddings in a sentence. 
-afterwards sentece embeddings are clustered into defined number of groupds.
-Closest sentences into each group are chosen for resulting summary.
+The model performs clusterisation of embeddings into NUM_SENTENCES
+clusters according to Bert word embeddings.
+Closest sentences to a centroid into each group are chosen to form a summary.
 """
 
 __all__ = ["Extractor"]
