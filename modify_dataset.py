@@ -15,7 +15,7 @@ from clustering_model import *
 
 DATASET = "mlsum"
 DATASET_LANG = 'ru'
-NUM_SLICES = 2
+NUM_SLICES = 100
 
 
 def make_extractive_summary(text):
