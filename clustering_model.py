@@ -1,9 +1,9 @@
 """
-Implementation of text extractive summarizer.
+Implementation of an extractive summarizer.
 
-The model performs clusterisation of embeddings into NUM_SENTENCES
-clusters according to Bert word embeddings.
-Closest sentences to a centroid into each group are chosen to form a summary.
+The model performs clusterisation of Bert embeddings into several
+clusters. Closest sentences to a centroid into each group
+are chosen to form a summary.
 """
 
 __all__ = ["Extractor"]
@@ -39,7 +39,12 @@ class Extractor():
 
     def tokenize_sentences(self):
         tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
-        return tokenizer(self.sentences, truncation=True, padding=True, return_tensors="pt")
+        return tokenizer(
+            self.sentences,
+            truncation=True,
+            padding=True,
+            return_tensors="pt"
+        )
 
     def encode_sentences(self):
         model = BertModel.from_pretrained(MODEL_NAME)
