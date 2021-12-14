@@ -1,10 +1,9 @@
 """
-A module to transform the dataset and prepare it for training
+A module to transform the dataset and prepare it
+for clustering evaluation.
 
 The dataset used is the Russian part of the MLSum dataset
 https://huggingface.co/datasets/mlsum
-Due to time limits the full dataset is cut
-and only the 1/5 of it is taken for transformation.
 """
 
 
@@ -25,26 +24,16 @@ DATASET_LANG = 'ru'
 def load_data(args):
     raw_datasets = load_dataset(DATASET, DATASET_LANG)
     raw_datasets['train'].set_format("pandas")
-    raw_datasets['validation'].set_format("pandas")
-    raw_datasets['test'].set_format("pandas")
     if args.dev_mode:
-        train_df = raw_datasets['train'][:25]
-        val_df = raw_datasets['validation'][:5]
-        test_df = raw_datasets['test'][:5]
+        test_df = raw_datasets['train'][:25]
     else:
-        train_df = raw_datasets['train'][:5000]
-        val_df = raw_datasets['validation'][:100]
-        test_df = raw_datasets['test'][:100]
-    return train_df, val_df, test_df
+        test_df = raw_datasets['train'][:args.number]
+    return test_df
 
 
-def transform(dfs, args):
-    train_df, val_df, test_df = dfs
-    train_df = transform_dataset(train_df, args)
-    val_df = transform_dataset(val_df, args)
-    test_df = transform_dataset(test_df, args)
-    dfs = train_df, val_df, test_df
-    return dfs
+def transform(df, args):
+    df = transform_dataset(df, args)
+    return df
 
 def transform_dataset(df, args):
     full_length = len(df)
@@ -90,11 +79,8 @@ def collect_modified_dataset():
     return transformed_df
 
 
-def save_dataset(dfs):
-    train_df, val_df, test_df = dfs
-    train_df.to_csv('train.csv', index=False)
-    val_df.to_csv('val.csv', index=False)
-    test_df.to_csv('test.csv', index=False)
+def save_dataset(df):
+    df.to_csv('test.csv', index=False)
 
 
 def define_args():
@@ -121,11 +107,11 @@ def define_args():
         help='the length of an intermediate transformed document'
     ),
     parser.add_argument(
-        '-o',
-        '--original',
-        type=bool,
-        default=False,
-        help='use MLSUM for training without modifications'
+        '-n',
+        '--number',
+        type=int,
+        default=200,
+        help='total number of rows to modify'
     )
     args = parser.parse_args()
     return args
@@ -134,8 +120,7 @@ def define_args():
 def main():
     args = define_args()
     dataset = load_data(args)
-    if not args.original:
-        dataset = transform(dataset, args)
+    dataset = transform(dataset, args)
     save_dataset(dataset)
 
 

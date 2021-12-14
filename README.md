@@ -1,18 +1,19 @@
-# A web application for extractive and abstractive summarization 
+## A web application for extractive summarization 
 
-## Introduction
+
+**Sentence embeddings clustering for text summarization.**
 
 This is a project for Natural Language Processing course (ods.ai, Huawei, december 2021)
-**Extractive summarization of the news articles.**
 
-The project consists of two parts:
-* Creation of extractive summaries from the text 
-* Using these summaries to fine-tune a language model.
+Full project is presented in the Colab notebook Project.ipynb
 
+### Introduction
 
+There are two ways to create a summary of a text: abstractive and extractive summarization. 
 
+Extractive summarization can be created by extracting most relevant parts of the text and combining them together.
 
-There are several models, that were fine-tuned on Russian new datasets for summarization:
+Abstractive summarization is a Language Model generated text. For example, there are several language models, recently fine-tuned on Russian new datasets for summarization:
 
 Model | ROUGE-1 | ROUGE-L
 ---|---|---
@@ -25,6 +26,7 @@ Model | ROUGE-1 | ROUGE-L
 
 ## Dataset
 
+A small part of the MLSUM dataset (200 rows) was modified to collect a set for solution evaluation. The result of summarization was put in the column 'summary', the original summary was removed.
 ###Dataset Summary
 
 MLSUM is a large-scale MultiLingual SUMmarization dataset, obtained from online newspapers. 
@@ -41,35 +43,7 @@ Train | Val | Test
 ---|---|---
 25556  | 750 | 757
 
-In the project the modification of the original dataset was proposed.
-Similar to the Pegasus model training, there is a module to create 3 sentence extractive summaries instead of 1 sentence original human-written summary, which are stored in the 'summary' column of the dataset.
 
-The summaries in the dataset are replaced by extractive summaries, obtained from the **K-Means clustering** model.
-
-More about **Pegasus**:
-https://ai.googleblog.com/2020/06/pegasus-state-of-art-model-for.html
-
-https://arxiv.org/abs/1912.08777
-
-The aim of this part is to teach the model take relevant parts of the original article rather than generate new text.
-
-In the project the training on the original and modified datasets are supported.
-
-### Language model
-
-The second part of the project is build on fine-tuning *t5-small* checkpoint[https://arxiv.org/abs/1910.10683]
- as shown in the **Hugging Face** tutorial:
-https://github.com/huggingface/notebooks/blob/master/examples/summarization.ipynb
-
-
-Model |  # params
----|---
-`T5-Small ` |  60M 
-
-
-## Fine-Tuning
-
-The example below shows how to finetune the `T5-small` model on the MLSUM dataset for summarization.
 
 ### Prerequisites
 ```
@@ -77,39 +51,23 @@ pip install -r requirements.txt
 ```
 #### modify_dataset.py
 
-
-Script for modify MLSUM dataset. 
+There are several 
 
 | Argument | Long   |    Description                 | Default
 |:----|:------------|-------------------------------|------------------
 | -d   | --dev_mode | fast fun on a set of 30 samples | False
-| -s   | --slice| length of temporary files | 50
-| -o   | --original | prepare original dataset for training | False
-
-
-### train.py
-
-For fine-tuning on 1 GPU settings the following hyperparameters might be used:
-
-```
-python train.py 
-  --batch_size 8 \
-  --epochs 15 \
-  --save_model True
-```
+| -s   | --slice| number of rows for a file | 50
+| -n   | --number | total number of rows to modify | 200
 
 
 ### Results
-For the project 3 models were fine-runed:
-the Pegasus model was fine-tuned on the Gazeta dataset
-It did not require any coding.
 
+After test set evaluation the following scores were calculated.
 
 Model | ROUGE-1 | ROUGE-L
 ---|---|---
-`autonlp-pegasus-ru-21074422 ` | 9.5923 | 9.4904
-`t5small-mlsum-ru` | 2 | 2
-`t5small-mlsum-extr-ru` | 2 | 2
+`Clustering model ` | 35.9 | 26.7
+
 
 
 ### Run application
