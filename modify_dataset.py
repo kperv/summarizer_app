@@ -78,10 +78,13 @@ def make_extractive_summary(text):
 
 def collect_modified_dataset():
     transformed_df = pd.DataFrame()
-    data_dir = os.getcwd()
-    for dataset_part in os.listdir(data_dir):
+    data_folder = os.path.join(os.getcwd(), '/data')
+    if not os.path.isdir(data_folder):
+        os.mkdir(data_folder)
+    for dataset_part in os.listdir(data_folder):
         if 'modified_MLSUM_part_' in dataset_part:
-            df_slice = pd.read_csv(dataset_part)
+            part_path = os.path.join(data_folder, dataset_part)
+            df_slice = pd.read_csv(part_path)
             transformed_df = pd.concat([transformed_df, df_slice])
             os.remove(dataset_part)
     return transformed_df
@@ -89,9 +92,9 @@ def collect_modified_dataset():
 
 def save_dataset(dfs):
     train_df, val_df, test_df = dfs
-    train_df.to_csv('data/train.csv', index=False)
-    val_df.to_csv('data/val.csv', index=False)
-    test_df.to_csv('data/test.csv', index=False)
+    train_df.to_csv('train.csv', index=False)
+    val_df.to_csv('val.csv', index=False)
+    test_df.to_csv('test.csv', index=False)
 
 
 def define_args():

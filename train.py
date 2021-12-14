@@ -62,9 +62,9 @@ def define_args():
 
 
 def read_dataset():
-    train = pd.read_csv('data/train.csv')
-    val = pd.read_csv('data/val.csv')
-    test = pd.read_csv('data/test.csv')
+    train = pd.read_csv('train.csv')
+    val = pd.read_csv('val.csv')
+    test = pd.read_csv('test.csv')
     dataset = DatasetDict({
         'train': Dataset.from_pandas(train),
         'val': Dataset.from_pandas(val),
