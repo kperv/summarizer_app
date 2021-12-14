@@ -3,6 +3,8 @@ A module to transform the dataset and prepare it for training
 
 The dataset used is the Russian part of the MLSum dataset
 https://huggingface.co/datasets/mlsum
+Due to time limits the full dataset is cut
+and only the 1/5 of it is taken for transformation.
 """
 
 
@@ -30,9 +32,9 @@ def load_data(args):
         val_df = raw_datasets['validation'][:5]
         test_df = raw_datasets['test'][:5]
     else:
-        train_df = raw_datasets['train'][:]
-        val_df = raw_datasets['validation'][:]
-        test_df = raw_datasets['test'][:]
+        train_df = raw_datasets['train'][:5000]
+        val_df = raw_datasets['validation'][:100]
+        test_df = raw_datasets['test'][:100]
     return train_df, val_df, test_df
 
 
@@ -57,8 +59,9 @@ def transform_and_save_batch(df, batch_num, args):
     end = (batch_num) * args.slice
     df_slice = df[start:end]
     df_slice_transformed = create_extractive_dataset(df_slice)
-    save_name = 'data/modified_MLSUM_part_' + str(batch_num) + '.csv'
-    df_slice_transformed.to_csv(save_name)
+    save_name = 'modified_MLSUM_part_' + str(batch_num) + '.csv'
+    save_path = os.path.join(os.getcwd(), save_name)
+    df_slice_transformed.to_csv(save_path)
     return df_slice_transformed
 
 
@@ -75,13 +78,12 @@ def make_extractive_summary(text):
 
 def collect_modified_dataset():
     transformed_df = pd.DataFrame()
-    data_dir = os.path.join(os.getcwd(), 'data/')
+    data_dir = os.getcwd()
     for dataset_part in os.listdir(data_dir):
         if 'modified_MLSUM_part_' in dataset_part:
-            part_path = os.path.join('data/', dataset_part)
-            df_slice = pd.read_csv(part_path)
+            df_slice = pd.read_csv(dataset_part)
             transformed_df = pd.concat([transformed_df, df_slice])
-            os.remove(part_path)
+            os.remove(dataset_part)
     return transformed_df
 
 
@@ -112,7 +114,7 @@ def define_args():
         '-s',
         '--slice',
         type=int,
-        default=50,
+        default=100,
         help='the length of an intermediate transformed document'
     ),
     parser.add_argument(

@@ -62,9 +62,9 @@ The second part of the project is build on fine-tuning *t5-small* checkpoint[htt
 https://github.com/huggingface/notebooks/blob/master/examples/summarization.ipynb
 
 
-Model | Description | # params
----|---|---
-`T5-Small ` | t5 model checkpoint | 60M 
+Model |  # params
+---|---
+`T5-Small ` |  60M 
 
 
 ## Fine-Tuning
