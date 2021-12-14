@@ -1,7 +1,7 @@
 ## A web application for text summarization 
 
 
-###Sentence embeddings clustering for extractive text summarization.
+### Sentence embeddings clustering for extractive text summarization.
 
 This is a project for **Natural Language Processing course** (ods.ai, Huawei, december 2021)
 
@@ -55,7 +55,7 @@ There are several command line arguments, that can be set:
 | `-n`   | `--number` | total number of rows to modify | 200
 
 
-### Results
+## Results
 
 After test set evaluation the following scores were calculated.
 
