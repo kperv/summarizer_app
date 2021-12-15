@@ -1,12 +1,14 @@
 """
 Implementation of an extractive summarizer.
 
-The model performs clusterisation of Bert embeddings into several
-clusters. Closest sentences to a centroid into each group
+The model performs KMeans clusterisation of Bert embeddings
+into clusters. Closest sentences to a centroid in each group
 are chosen to form a summary.
 """
 
+
 __all__ = ["Extractor"]
+
 
 import numpy as np
 import nltk

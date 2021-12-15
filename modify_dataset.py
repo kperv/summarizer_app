@@ -89,7 +89,7 @@ def define_args():
         description=textwrap.dedent('''\
             Replace MLSUM 'summary' column with a generated extractive summary
                  --------------------------------
-            set --dev-mode=True for fast run on 25,5,5 samples
+            set --dev-mode=True for fast run on 25 samples
         ''')
     )
     parser.add_argument(
@@ -97,13 +97,13 @@ def define_args():
         '--dev_mode',
         type=bool,
         default=False,
-        help='run in development mode on (25,5,5) samples (default: False)'
+        help='run in development mode on 25 samples (default: False)'
     )
     parser.add_argument(
         '-s',
         '--slice',
         type=int,
-        default=100,
+        default=50,
         help='the length of an intermediate transformed document'
     ),
     parser.add_argument(
