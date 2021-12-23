@@ -16,8 +16,8 @@ def process():
         input_number = request.form['number']
         text = [input_text]
         number = int(input_number)
-        extractor = Extractor(text=text)
-        summary, score = extractor.summarize()
+        extractor = Extractor(text=text, n_sentences=number)
+        summary = extractor.summarize()
     return render_template("index.html", result=summary)
 
 if __name__ == '__main__':

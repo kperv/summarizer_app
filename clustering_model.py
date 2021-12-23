@@ -26,9 +26,10 @@ nltk.download('punkt')
 class Extractor():
     """ Process text and make a summary from the closest sentences
     to the meaning of the text."""
-    def __init__(self, text):
+    def __init__(self, text, n_sentences=NUM_SENTENCES):
         super(Extractor, self).__init__()
         self.text = text
+        self.n_sentences = n_sentences
         self.sentences = self.break_text_into_sentences()
         self.tokenized_sentences = self.tokenize_sentences()
         self.sentence_embeddings = self.encode_sentences()
@@ -56,7 +57,7 @@ class Extractor():
         return embeddings.mean(axis=1)
 
     def cluster_sentence_embeddings(self):
-        kmeans = KMeans(n_clusters=NUM_SENTENCES).fit(self.sentence_embeddings)
+        kmeans = KMeans(n_clusters=self.n_sentences).fit(self.sentence_embeddings)
         return kmeans.cluster_centers_
 
     def get_n_closest(self):
@@ -64,7 +65,7 @@ class Extractor():
             self.sentence_embeddings,
             self.centroids
             )
-        return list(np.argsort(min_distance_positions)[:NUM_SENTENCES])
+        return list(np.argsort(min_distance_positions)[:self.n_sentences])
 
     def extract_summary(self):
         summary = ""
