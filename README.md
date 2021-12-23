@@ -67,7 +67,7 @@ Model | ROUGE-1 | ROUGE-L
 
 ### Run application
 
-A demo to try extractive summarization was created *right now in dev state = not working*. 
+A demo to try extractive summarization was created. The inference time is long due to downloading nlp models.
 
 To run the web part run *run.sh* from the *app* folder: `cd app && ./run.sh`. 
 The web interface will be available on *localhost:8080* in your browser.
