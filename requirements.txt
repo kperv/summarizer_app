@@ -1,9 +1,9 @@
 numpy
-nltk
 pandas
-transformers
-bert-score
+nltk
 sklearn
-datasets
 torch
+transformers
+datasets
 rouge==0.3.1
+flask

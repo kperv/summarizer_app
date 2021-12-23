@@ -15,6 +15,3 @@ COPY ./clustering_model.py /sum_app/clustering_model.py
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 COPY . /sum_app
-
-
-s
